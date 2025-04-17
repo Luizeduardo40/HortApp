@@ -1,27 +1,34 @@
 
-import React from 'react';
+import React, { use } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
+import * as Animateble from 'react-native-animatable'
+
+import { useNavigation } from '@react-navigation/native'
+
 export default function Welcome() {
+    const navigation = useNavigation();
+    
     return (
         <View style={styles.container}>
 
             <View style={styles.containerLogo}>
-                <Image
+                <Animateble.Image
+                    animation="flipInY"
                     source={require('../../assets/logo.png')}
                     style={{ width: '100%'}}
                     resizeMode="contain"
                 />
             </View>
 
-            <View style={styles.containerForm}>
+            <Animateble.View delay={600} animation="fadeInUp" style={styles.containerForm}>
                 <Text style={styles.title}>Da horta para a sua casa!</Text>
                 <Text style={styles.text}>Faça o login para começar</Text>
 
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={ () => navigation.navigate('SignIn')}>
                     <Text style={styles.buttonText}>Acessar</Text>
                 </TouchableOpacity>
-            </View>
+            </Animateble.View>
 
         </View>
     );
@@ -62,7 +69,7 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         width: '60%',
         alignSelf: 'center',
-        bottom: '75%',
+        bottom: '15%',
         alignItems: 'center',
         justifyContent: 'center'
     },

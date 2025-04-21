@@ -1,5 +1,6 @@
 import express from 'express'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 import { PrismaClient } from '@prisma/client'
 
@@ -25,6 +26,39 @@ router.post('/cadastro', async (req, res) => {
         })
 
         res.status(201).json(user)
+
+    } catch(err){
+        res.status(500).json({message: "Erro no servidor, tente novamente."})
+    }
+})
+
+//Login
+router.post('/login', async (req, res) => {
+
+    try{
+        const userInfo = req.body
+
+        // Busca o usuario no banco de dados
+        const user = await prisma.user.findUnique({ 
+            where: {email: userInfo.email},
+        })
+
+        // Verifica se o usuario existe no banco de dados
+        if(!user){
+            return res.status(404).json({message: "Usuário não encontrado."})
+        }
+
+        // Compara a senha do banco de dados com a que o usuario digitou
+        const isMatch = await bcrypt.compare(userInfo.password, user.password)
+
+        // Verifica se a senha esta correta
+        if(!isMatch){
+            return res.status(400).json({message: "Senha inválida."})
+        }
+
+        // Gerar o token JWT
+
+        res.status(200).json(user)
 
     } catch(err){
         res.status(500).json({message: "Erro no servidor, tente novamente."})

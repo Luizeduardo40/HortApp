@@ -1,9 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, TextInput, TouchableOpacity} from 'react-native'
 
 import * as Animatable from 'react-native-animatable'
 
+import api from '../../services/api'
+
 export default function SignUp(){
+    const [email, setEmail] = useState('')
+    const [telefone, setTelefone] = useState('')
+    const [cpf, setCpf] = useState('')
+    const [password, setPassword] = useState('')
+
+    async function handleSubmit(){
+        try{
+            await api.post('/cadastro', {
+                email: email,
+                telefone: telefone,
+                cpf: cpf,
+                password: password,
+            })
+            
+            alert('Usuário cadastrado com sucesso.')
+        } catch(err) {
+            console.log(err)
+            alert('Erro ao cadastrar o usuário.')
+        }
+
+        console.log('Email', email)
+        console.log('Telefone', telefone)
+        console.log('CPF', cpf)
+        console.log('Senha', password)
+    }
+
     return(
         <View style={styles.container}>
             <Animatable.View animation='fadeInLeft' delay={500} style={styles.containerHeader}>
@@ -15,27 +43,36 @@ export default function SignUp(){
                 <TextInput
                     placeholder='Digite um email...'
                     style={styles.input}
+                    value={email}
+                    onChangeText={setEmail}
                 />
 
                 <Text style={styles.title}>Telefone</Text>
                 <TextInput
                     placeholder='Digite um número de telefone'
                     style={styles.input}
+                    value={telefone}
+                    onChangeText={setTelefone}
                 />
 
                 <Text style={styles.title}>CPF</Text>
                 <TextInput
                     placeholder='Digite seu CPF'
                     style={styles.input}
+                    value={cpf}
+                    onChangeText={setCpf}
                 />
 
                 <Text style={styles.title}>Senha</Text>
                 <TextInput
                     placeholder='Digite sua senha'
                     style={styles.input}
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry
                 />
 
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={handleSubmit}>
                     <Text style={styles.buttonText}>Cadastrar</Text>
                 </TouchableOpacity>
             </Animatable.View>

@@ -11,7 +11,8 @@ const JWT_SECRET = process.env.JWT_SECRET
 
 //Cadastro
 router.post('/cadastro', async (req, res) => {
-    
+    console.log('Chegou no backend', req.body)
+
     try{
         const user = req.body
 
@@ -21,7 +22,7 @@ router.post('/cadastro', async (req, res) => {
         const userDB = await prisma.user.create({ //retirar depois
             data: {
                 email: user.email,
-                name: user.name,
+                telefone: user.telefone,
                 cpf: user.cpf,
                 password: hashPassword,
             },
@@ -30,6 +31,7 @@ router.post('/cadastro', async (req, res) => {
         res.status(201).json(user)
 
     } catch(err){
+        console.log(err)
         res.status(500).json({ message: "Erro no servidor, tente novamente." })
     }
 })
